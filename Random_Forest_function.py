@@ -88,7 +88,6 @@ def random_forest_model(df, feat_to_drop, testing_size, feat_threshold=0, df_to_
         plt.xlabel('Feature Importance Score', fontsize=12)
         plt.ylabel('Features', fontsize=12)
         plt.title("Visualizing Important Features", fontsize=15, pad=15)
-        plt.show()
           
         #printed confusion matrix and normalized confusion matrix as well as heat maps for both
         title_options = [("Confusion Matrix", None), ("Normalized Confusion Matrix", "true")] 
@@ -156,6 +155,7 @@ def random_forest_model(df, feat_to_drop, testing_size, feat_threshold=0, df_to_
                 types_new = df_to_test['type'].unique()
                 
                 confusion(rfc2, title_options, important_features_new, Y_new_data, types_new)
+    plt.show()
 
 
 # In[2]:
