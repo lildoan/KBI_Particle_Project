@@ -20,6 +20,7 @@ def make_histogram(fig, df, particle_type, parameter):
 
 # Create buckets to group proteins 
 def normalize_data(df, particle_types):
+    import pandas as pd
     type_df = pd.DataFrame()
     for x in particle_types:
         df1 = df[df.type == x]
@@ -68,3 +69,33 @@ other_data = normalize_data(df, ['air_bubble', 'glass', 'air_aggregate'])
 
  # fig=plt.figure(figsize=(20,40))
     #ax1=fig.add_subplot(1,1,1)
+
+
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+def confusion(rfc, title_options, X, Y, types):
+    """
+
+    Parameters
+    ----------
+    rfc = random forest model that is used for predictions
+    title_options = list of two grouped strings, (confusion matrix name, normalized or not)
+    X = df, Testing X data
+    Y = df, Testing Y data
+    types = list, all unique types of particles in df
+
+    Returns: non-normalized and normalized Confusion matrices and heat maps of model predictions
+    -------
+
+    """
+    for title, normalize in title_options:
+        disp = ConfusionMatrixDisplay.from_estimator(rfc, X, Y, display_labels=types, include_values=False,
+                                                     cmap=plt.cm.plasma, normalize=normalize,
+                                                     xticks_rotation='vertical')
+        disp.ax_.set_title(title)
+
+        print(title)
+        print(disp.confusion_matrix)
+
+
+
+

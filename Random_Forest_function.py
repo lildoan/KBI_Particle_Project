@@ -32,19 +32,7 @@ def random_forest_model(df, feat_to_drop, testing_size, feat_threshold=0, df_to_
     from sklearn.feature_selection import SelectFromModel
     import seaborn as sns
     
-    def confusion(rfc, title_options, X, Y, types):
-        """
-        function to generate confusion matrix and display heat maps
-        """
-        from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-        for title, normalize in title_options:
-            disp = ConfusionMatrixDisplay.from_estimator(rfc, X, Y, display_labels=types, include_values=False, 
-                cmap=plt.cm.plasma, normalize=normalize, xticks_rotation='vertical')
-            disp.ax_.set_title(title)
-
-            print(title)
-            print(disp.confusion_matrix)
         
     
     X=df.drop(feat_to_drop, axis=1) #drop true classification from data along with features that are not important
