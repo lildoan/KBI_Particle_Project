@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def group_particles(df, particle_type):
     type_df=df.loc[df["type"]==particle_type]
     print("number of {} particles = {}".format(particle_type, type_df.shape[0]))
@@ -34,6 +37,14 @@ silicone_data = normalize_data(df, ['silicone_oil', 'multi_si_oil', 'silicone_oi
 schlieren_data = normalize_data(df, ['schlieren_lines'])
 other_data = normalize_data(df, ['air_bubble', 'glass', 'air_aggregate'])
 ''' 
+'''''
+def normalize_data_sil(df, particle_types):
+    type_df = pd.DataFrame()
+    for x in particle types:
+        df1 = df[df.type == x]
+        type_df = pd. concat([type_df, df1])
+    return type_df   
+'''
 
 ##DEBUGGING CODE
 # if __name__ == "__main__":
