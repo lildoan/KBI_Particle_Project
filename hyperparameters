@@ -22,7 +22,70 @@ for depth in max_depth_range:
     score = rcf.score(X_test, Y_test)
     accuracy.append(score)
     #print(accuracy)
+'''''
 plt.plot(max_depth_range, accuracy)
 plt.xlabel('max depth')
 plt.ylabel('accuracy')
 plt.show()
+'''''
+
+from sklearn.ensemble import RandomForestClassifier
+rcf = RandomForestClassifier(random_state = 42)
+from pprint import pprint
+print('Parameters currently in use:\n')
+pprint(rcf.get_params())
+
+
+import numpy as np
+from sklearn.model_selection import RandomizedSearchCV
+# Number of trees in random forest
+n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
+# Number of features to consider at every split
+max_features = ['auto', 'sqrt']
+# Maximum number of levels in tree
+max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
+max_depth.append(None)
+# Minimum number of samples required to split a node
+min_samples_split = [2, 5, 10]
+# Minimum number of samples required at each leaf node
+min_samples_leaf = [1, 2, 4]
+# Method of selecting samples for training each tree
+bootstrap = [True, False]
+# Create the random grid
+random_grid = {'n_estimators': n_estimators,
+               'max_features': max_features,
+               'max_depth': max_depth,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap}
+pprint(random_grid)
+
+import pandas as pd
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import SelectFromModel
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.ensemble import RandomForestClassifier
+df = pd.read_csv('categorized_particles_101.csv')
+df.type.values.reshape(-1, 1).shape
+feat_to_drop = ['type','step','experiment','particle_id', 'ml_type_proba']
+X=df.drop(feat_to_drop, axis=1)
+Y=df['type'].values
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.3, random_state = 0)
+# Use the random grid to search for best hyperparameters
+# First create the base model to tune
+rcf = RandomForestClassifier()
+# Random search of parameters, using 3 fold cross validation,
+# search across 100 different combinations, and use all available cores
+rcf_random = RandomizedSearchCV(estimator = rcf, param_distributions = random_grid, n_iter = 75, cv = 3, verbose=2, random_state=42, n_jobs = -1)
+# Fit the random search model
+rcf_random.fit(X_train, Y_train)
+
+'''''
+rf_random.best_params_
+
+''''''
