@@ -1,0 +1,28 @@
+import pandas as pd
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import SelectFromModel
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.ensemble import RandomForestClassifier
+df = pd.read_csv('categorized_particles_101.csv')
+df.type.values.reshape(-1, 1).shape
+feat_to_drop = ['type','step','experiment','particle_id', 'ml_type_proba']
+max_depth_range = list(range(1,15))
+accuracy = []
+X=df.drop(feat_to_drop, axis=1)
+Y=df['type'].values
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.3, random_state = 0)
+for depth in max_depth_range:
+    rcf = RandomForestClassifier(max_depth = depth, random_state = 0)
+    rcf.fit(X_train, Y_train)
+    score = rcf.score(X_test, Y_test)
+    accuracy.append(score)
+    #print(accuracy)
+plt.plot(max_depth_range, accuracy)
+plt.xlabel('max depth')
+plt.ylabel('accuracy')
+plt.show()

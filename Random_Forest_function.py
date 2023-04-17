@@ -33,18 +33,43 @@ def random_forest_model(df, feat_to_drop, testing_size, feat_threshold=0, df_to_
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.feature_selection import SelectFromModel
     import seaborn as sns
-    
+    from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-        
-    
+    def confusion(rfc, title_options, X, Y, types):
+        """
+
+        Parameters
+        ----------
+        rfc = random forest model that is used for predictions
+        title_options = list of two grouped strings, (confusion matrix name, normalized or not)
+        X = df, Testing X data
+        Y = df, Testing Y data
+        types = list, all unique types of particles in df
+
+        Returns: non-normalized and normalized Confusion matrices and heat maps of model predictions
+        -------
+
+        """
+        for title, normalize in title_options:
+            disp = ConfusionMatrixDisplay.from_estimator(rfc, X, Y, display_labels=types, include_values=False,
+                                                         cmap=plt.cm.Blues, normalize=normalize,
+                                                         xticks_rotation='vertical')
+            disp.ax_.set_title(title)
+
+            print(title)
+            print(disp.confusion_matrix)
+
     X=df.drop(feat_to_drop, axis=1) #drop true classification from data along with features that are not important
     Y=df['type'].values #separate true classifications for fitting and evaluating the model
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = testing_size, random_state = 0)
     #split data into model training and model testing dataframes, random number seed of 0 
     
-    rfc = RandomForestClassifier(criterion = 'gini', max_depth=None, random_state = 0) 
-    
+    rfc = RandomForestClassifier(criterion = 'gini', max_depth=5, random_state = 0) #change
+    #accuracy of model on training data =0.83
+    #accuracy of model on testing data =0.84
+    #took 230 seconds to execute
+
     """
     random state - set to either 0 or 42 is common, locks in the seed for a random number generator so 
     the same string of random numbers can be reproduced in the future. Used to create randomness in data selection
@@ -186,7 +211,6 @@ print("run time =",end - start," seconds")
 
 
 # In[ ]:
-
 
 
 
