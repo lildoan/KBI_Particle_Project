@@ -16,7 +16,7 @@ test_feat_drop = ['type','step','experiment','particle_id']
 max_depth_range = list(range(1,9))
 accuracy = []
 X=df.drop(feat_to_drop, axis=1)
-    Y=df['type'].values
+Y=df['type'].values
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.3, random_state = 0)
 for depth in max_depth_range:
     rcf = RandomForestClassifier(max_depth = depth, random_state = 0)
@@ -24,8 +24,9 @@ for depth in max_depth_range:
     score = rcf.score(X_test, Y_test)
     accuracy.append(score)
     #print(accuracy)
-    #plt.plot(max_depth_range, accuracy)
-
+plt.plot(max_depth_range, accuracy)
+plt.show()
+"""""
 #testing hyperparameters
 df = pd.read_csv('categorized_particles_101.csv')
 df.type.values.reshape(-1, 1).shape
@@ -41,12 +42,13 @@ for depth in max_depth_range:
     score = rcf.score(X_test, Y_test)
     accuracy.append(score)
     #print(accuracy)
-'''''
+    #do a log scale to explore higher ranges
+
 plt.plot(max_depth_range, accuracy)
 plt.xlabel('max depth')
 plt.ylabel('accuracy')
 plt.show()
-'''''
+
 
 from sklearn.ensemble import RandomForestClassifier
 rcf = RandomForestClassifier(random_state = 42)
@@ -54,7 +56,8 @@ from pprint import pprint
 print('Parameters currently in use:\n')
 pprint(rcf.get_params())
 
-
+#used grid search cv instead, compare
+#can ask it for the best model not just best parameters
 import numpy as np
 from sklearn.model_selection import RandomizedSearchCV
 # Number of trees in random forest
@@ -106,7 +109,7 @@ rcf_random = RandomizedSearchCV(estimator = rcf, param_distributions = random_gr
 # Fit the random search model
 rcf_random.fit(X_train, Y_train)
 
-'''''
+
 rf_random.best_params_
 
-''''''
+"""
