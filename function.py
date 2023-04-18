@@ -53,6 +53,7 @@ random_forest_model(df_h, feat_to_drop, 0.3, 0.1)
 end = timer()
 print("run time =",end - start," seconds")
 
+'''''
 import pandas as pd
 import pandas as pd
 import numpy as np
@@ -79,4 +80,4 @@ for depth in max_depth_range:
     accuracy.append(score)
     #print(accuracy)
     plt.plot(max_depth_range, accuracy)
-
+'''''''

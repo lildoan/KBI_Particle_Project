@@ -65,7 +65,7 @@ def random_forest_model(df, feat_to_drop, testing_size, feat_threshold=0, df_to_
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = testing_size, random_state = 0)
     #split data into model training and model testing dataframes, random number seed of 0 
     
-    rfc = RandomForestClassifier(criterion = 'gini', max_depth=5, random_state = 0) #change
+    rfc = RandomForestClassifier(criterion = 'gini', max_depth=3, random_state = 0) #change
     #accuracy of model on training data =0.83
     #accuracy of model on testing data =0.84
     #took 230 seconds to execute
