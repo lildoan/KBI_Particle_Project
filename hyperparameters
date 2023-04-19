@@ -116,16 +116,17 @@ rcf.score = score(X_train, Y_test, sample_weight = None)
 print('rcf.score =', rcf.score)
 
 #prediction
+rcf_random.fit(X_train, Y_train)
 prediction = rcf.predict(X_test)
 accuracy_score(Y_test, prediction)
 print('accuracy score =', accuracy_score(Y_test, prediction))
 #f1_score(Y_test, prediction)
 
-"""
-#def predict(self, X_test):
-#    Y_pred = rcf.predict()
+def predict(self, X_test):
+    Y_pred = rcf.predict()
 #print('Accuracy: %3f' % accuracy_score(Y_test, Y_pred))
-""
+
+""""
 def evaluate(rcf, X_test, Y_test):
     predictions = rcf.predict(X_test)  #predictions=Y_test at some input, if its equal then it got it right
     errors = abs((predictions) - (Y_test))
@@ -143,5 +144,5 @@ base_model.fit(X_train, Y_train)
 base_accuracy = evaluate(base_model, X_test, Y_test)
 #print("base model score =", base_model.score(X_train, Y_train))
 #print(base_accuracy)
-"""
+"""""
 
