@@ -133,7 +133,6 @@ print('base accuracy score =', accuracy_score(Y_test, prediction))    #Y_pred = 
 print('Improvement of {:0.2f}%'.format(100 * (best_accuracy - base_accuracy) / base_accuracy))
 
 
-"""
 from sklearn.model_selection import GridSearchCV
 # Create the parameter grid based on the results of random search
 from sklearn.model_selection import GridSearchCV
@@ -161,4 +160,3 @@ print('best parameters for grid search =', grid_search.best_params_)
 best_grid = grid_search.best_estimator_
 print(best_grid)
 #grid_accuracy = evaluate(best_grid, X_train, Y_test)
-"""
