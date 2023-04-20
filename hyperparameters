@@ -2,6 +2,7 @@ import pandas as pd
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from numexpr import evaluate
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SelectFromModel
@@ -115,6 +116,7 @@ def score(X_train, Y_test, sample_weight = None):
 rcf.score = score(X_train, Y_test, sample_weight = None)
 print('rcf.score =', rcf.score)
 
+""""
 #prediction
 rcf_random.fit(X_train, Y_train)
 prediction = rcf.predict(X_test)
@@ -126,7 +128,7 @@ def predict(self, X_test):
     Y_pred = rcf.predict()
 #print('Accuracy: %3f' % accuracy_score(Y_test, Y_pred))
 
-""""
+
 def evaluate(rcf, X_test, Y_test):
     predictions = rcf.predict(X_test)  #predictions=Y_test at some input, if its equal then it got it right
     errors = abs((predictions) - (Y_test))
@@ -146,3 +148,30 @@ base_accuracy = evaluate(base_model, X_test, Y_test)
 #print(base_accuracy)
 """""
 
+from sklearn.model_selection import GridSearchCV
+# Create the parameter grid based on the results of random search
+from sklearn.model_selection import GridSearchCV
+# Create the parameter grid based on the results of random search
+param_grid = {
+    'bootstrap': [True],
+    'max_depth': [80, 90, 100, 110],
+    'max_features': [2, 3],
+    'min_samples_leaf': [3, 4, 5],
+    'min_samples_split': [8, 10, 12],
+    'n_estimators': [100, 200, 300, 1000]
+}
+# Create a based model
+rfc_grid = RandomForestClassifier()
+# Instantiate the grid search model
+grid_search = GridSearchCV(estimator = rfc_grid, param_grid = param_grid,
+                          cv = 3, n_jobs = -1, verbose = 2)
+print('grid search =', grid_search)
+
+# Fit the grid search to the data
+grid_search.fit(X_train, Y_train)
+grid_search.best_params_
+print('best parameters for grid search =', grid_search.best_params_)
+
+best_grid = grid_search.best_estimator_
+print(best_grid)
+#grid_accuracy = evaluate(best_grid, X_train, Y_test)
