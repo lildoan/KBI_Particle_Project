@@ -90,6 +90,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
+import pickle
 
 
 df = pd.read_csv('categorized_particles_101.csv')
@@ -106,48 +107,33 @@ rcf = RandomForestClassifier()
 rcf_random = RandomizedSearchCV(estimator = rcf, param_distributions = random_grid, n_iter = 10, cv = 3, verbose=2,
                 random_state=0, n_jobs = -1)
 # Fit the random search model
+
 rcf_random.fit(X_train, Y_train)
 rcf_random.get_params()
 print('best parameters =',rcf_random.best_params_)
+best_random = rcf_random.best_estimator_
+# s = pickle.dump(best_random, "best hyperparameter model.pcl")
 
-#scoring
-def score(X_train, Y_test, sample_weight = None):
-    pass
-rcf.score = score(X_train, Y_test, sample_weight = None)
-print('rcf.score =', rcf.score)
 
-""""
-#prediction
-rcf_random.fit(X_train, Y_train)
-prediction = rcf.predict(X_test)
+#Best Model
+prediction = best_random.predict(X_test)
 accuracy_score(Y_test, prediction)
-print('accuracy score =', accuracy_score(Y_test, prediction))
+best_accuracy = accuracy_score(Y_test, prediction)
+print('best accuracy score =', accuracy_score(Y_test, prediction))
 #f1_score(Y_test, prediction)
 
-def predict(self, X_test):
-    Y_pred = rcf.predict()
-#print('Accuracy: %3f' % accuracy_score(Y_test, Y_pred))
+#Base Model
+rfc_base = RandomForestClassifier(criterion = 'gini', max_depth=3, random_state = 0)
+rfc_base.fit(X_train, Y_train)
+prediction = rfc_base.predict(X_test)
+accuracy_score(Y_test, prediction)
+base_accuracy = accuracy_score(Y_test, prediction)#def predict(self, X_test):
+print('base accuracy score =', accuracy_score(Y_test, prediction))    #Y_pred = rcf.predict()
+
+print('Improvement of {:0.2f}%'.format(100 * (best_accuracy - base_accuracy) / base_accuracy))
 
 
-def evaluate(rcf, X_test, Y_test):
-    predictions = rcf.predict(X_test)  #predictions=Y_test at some input, if its equal then it got it right
-    errors = abs((predictions) - (Y_test))
-    mape = 100 * np.mean(errors / (Y_test))
-    accuracy = 100 - mape
-    print('Model Performance')
-    print('Average Error: {:0.4f} degrees.'.format(np.mean(errors)))
-    print('Accuracy = {:0.2f}%.'.format(accuracy))
-
-    return accuracy
-
-
-base_model = RandomForestClassifier(n_estimators = 100, random_state = 0)
-base_model.fit(X_train, Y_train)
-base_accuracy = evaluate(base_model, X_test, Y_test)
-#print("base model score =", base_model.score(X_train, Y_train))
-#print(base_accuracy)
-"""""
-
+"""
 from sklearn.model_selection import GridSearchCV
 # Create the parameter grid based on the results of random search
 from sklearn.model_selection import GridSearchCV
@@ -175,3 +161,4 @@ print('best parameters for grid search =', grid_search.best_params_)
 best_grid = grid_search.best_estimator_
 print(best_grid)
 #grid_accuracy = evaluate(best_grid, X_train, Y_test)
+"""
