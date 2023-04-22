@@ -112,7 +112,8 @@ rcf_random.fit(X_train, Y_train)
 rcf_random.get_params()
 print('best parameters =',rcf_random.best_params_)
 best_random = rcf_random.best_estimator_
-# s = pickle.dump(best_random, "best hyperparameter model.pcl")
+with open("best hyperparameter model.pcl", "wb") as f:
+    pickle.dump(best_random, f)
 
 
 #Best Model
@@ -127,12 +128,16 @@ rfc_base = RandomForestClassifier(criterion = 'gini', max_depth=3, random_state 
 rfc_base.fit(X_train, Y_train)
 prediction = rfc_base.predict(X_test)
 accuracy_score(Y_test, prediction)
-base_accuracy = accuracy_score(Y_test, prediction)#def predict(self, X_test):
-print('base accuracy score =', accuracy_score(Y_test, prediction))    #Y_pred = rcf.predict()
+base_accuracy = accuracy_score(Y_test, prediction)
+print('base accuracy score =', accuracy_score(Y_test, prediction))
 
 print('Improvement of {:0.2f}%'.format(100 * (best_accuracy - base_accuracy) / base_accuracy))
 
-
+#random search allowed us to narrow down the range for each hyperparameter
+#so now that we know where to concentrate our search, we can explicityly specify
+#every combo of settings to try
+#gridsearch, instad of sampling randomly from a distribution, evaluates all combinates
+#we define
 from sklearn.model_selection import GridSearchCV
 # Create the parameter grid based on the results of random search
 from sklearn.model_selection import GridSearchCV
@@ -143,7 +148,7 @@ param_grid = {
     'max_features': [2, 3],
     'min_samples_leaf': [3, 4, 5],
     'min_samples_split': [8, 10, 12],
-    'n_estimators': [100, 200, 300, 1000]
+    'n_estimators': [100, 200, 300, 500]
 }
 # Create a based model
 rfc_grid = RandomForestClassifier()
@@ -158,5 +163,16 @@ grid_search.best_params_
 print('best parameters for grid search =', grid_search.best_params_)
 
 best_grid = grid_search.best_estimator_
-print(best_grid)
-#grid_accuracy = evaluate(best_grid, X_train, Y_test)
+prediction = best_grid.predict(X_test)
+accuracy_score(Y_test, prediction)
+best_grid_accuracy = accuracy_score(Y_test, prediction)
+print('best grid accuracy score = ', accuracy_score(Y_test, prediction))
+
+rfc_grid_base = RandomForestClassifier(criterion = 'gini', max_depth=3, random_state = 0)
+rfc_grid_base.fit(X_train, Y_train)
+prediction = rfc_grid_base.predict(X_test)
+accuracy_score(Y_test, prediction)
+base_grid_accuracy = accuracy_score(Y_test, prediction)
+print('base accuracy score =', accuracy_score(Y_test, prediction))
+
+print('Improvement of {:0.2f}%'.format(100 * (best_grid_accuracy - base_grid_accuracy) / base_grid_accuracy))
