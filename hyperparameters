@@ -174,15 +174,15 @@ prediction = rfc_grid_base.predict(X_test)
 accuracy_score(Y_test, prediction)
 base_grid_accuracy = accuracy_score(Y_test, prediction)
 
-print('best parameters =',rcf_random.best_params_)
+#print('best parameters =',rcf_random.best_params_)
 
 print('best parameters for grid search =', grid_search.best_params_)
 
-print('best random accuracy score =', accuracy_score(Y_test, prediction))
-print('base random accuracy score =', accuracy_score(Y_test, prediction))
+#print('best random accuracy score =', accuracy_score(Y_test, prediction))
+#print('base random accuracy score =', accuracy_score(Y_test, prediction))
 
 print('base grid accuracy score =', accuracy_score(Y_test, prediction))
 
 print('Improvement of {:0.2f}%'.format(100 * (best_grid_accuracy - base_grid_accuracy) / base_grid_accuracy))
-print('Improvement of {:0.2f}% from gridsearch against randomsearchcv'.format(100 * (best_grid_accuracy - base_accuracy) / base_accuracy))
+#print('Improvement of {:0.2f}% from gridsearch against randomsearchcv'.format(100 * (best_grid_accuracy - base_accuracy) / base_accuracy))
 
