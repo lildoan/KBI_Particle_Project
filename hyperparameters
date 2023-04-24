@@ -129,6 +129,9 @@ rfc_base.fit(X_train, Y_train)
 prediction = rfc_base.predict(X_test)
 accuracy_score(Y_test, prediction)
 base_accuracy = accuracy_score(Y_test, prediction)
+#base_random = rcf_base
+#with open("base model rfc.pcl", "wb") as base_model:
+    #pickle.dump(base_random, base_model)
 print('base accuracy score =', accuracy_score(Y_test, prediction))
 
 print('Improvement of {:0.2f}%'.format(100 * (best_accuracy - base_accuracy) / base_accuracy))
