@@ -1,6 +1,11 @@
 import pandas as pd
-from matplotlib import pyplot as plt
-
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import SelectFromModel
+import seaborn as sns
 
 def group_particles(df, particle_type):
     type_df=df.loc[df["type"]==particle_type]
@@ -75,31 +80,50 @@ other_data = normalize_data(df, ['air_bubble', 'glass', 'air_aggregate'])
     #ax1=fig.add_subplot(1,1,1)
 
 
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-def confusion(rfc, title_options, X, Y, types):
+
+
+def confusion(rfc, X, Y, types):
     """
 
     Parameters
     ----------
     rfc = random forest model that is used for predictions
-    title_options = list of two grouped strings, (confusion matrix name, normalized or not)
+    # remove: title_options = list of two grouped strings, (confusion matrix name, normalized or not)
     X = df, Testing X data
     Y = df, Testing Y data
     types = list, all unique types of particles in df
+    types = df['type'].unique()
 
     Returns: non-normalized and normalized Confusion matrices and heat maps of model predictions
     -------
 
     """
+    title_options = [("Confusion Matrix", None), ("Normalized Confusion Matrix", "true")]
     for title, normalize in title_options:
         disp = ConfusionMatrixDisplay.from_estimator(rfc, X, Y, display_labels=types, include_values=False,
-                                                     cmap=plt.cm.plasma, normalize=normalize,
+                                                     cmap=plt.cm.Blues, normalize=normalize,
                                                      xticks_rotation='vertical')
         disp.ax_.set_title(title)
 
         print(title)
         print(disp.confusion_matrix)
 
+
+def feature_analysis(rfc, X):
+    """
+
+
+    """
+    feature_importance = pd.Series(rfc.feature_importances_, index=X.columns).sort_values(ascending=True)
+    # use full feature model to evaluate importance of features and rank them low to high
+
+    print('Feature importances: ', rfc.feature_importances_)
+    # values of relative feature importance scores, useful for threshold determination
+
+    print(sns.barplot(x=feature_importance, y=feature_importance.index))  # visualization of feature importance
+    plt.xlabel('Feature Importance Score', fontsize=12)
+    plt.ylabel('Features', fontsize=12)
+    plt.title("Visualizing Important Features", fontsize=15, pad=15)
 
 
 
