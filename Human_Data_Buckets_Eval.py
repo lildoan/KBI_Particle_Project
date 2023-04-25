@@ -22,12 +22,12 @@ df4 = pd.read_csv('categorized_particles_101.csv')
 types=df4['type'].unique()
 print(types)
 
-def group_particles(df4, particle_type):
+def group_particles(df, particle_type):
     type_df=df.loc[df["type"]==particle_type]
     print("number of {} particles = {}".format(particle_type, type_df.shape[0]))
     return type_df
 for x in types:
-    group_particles(df,x)
+    group_particles(df4,x)
 
 def rebucket_data(df, buckets=None):
     """
