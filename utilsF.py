@@ -6,6 +6,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SelectFromModel
 import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, f1_score
+import pickle
+from pprint import pprint
+import numpy as np
+from sklearn.model_selection import RandomizedSearchCV
 
 def group_particles(df, particle_type):
     type_df=df.loc[df["type"]==particle_type]
@@ -107,7 +117,7 @@ other_data = normalize_data(df, ['air_bubble', 'glass', 'air_aggregate'])
 
 def confusion(rfc, X, Y, types):
     """
-
+    Display
     Parameters
     ----------
     rfc = random forest model that is used for predictions
@@ -147,6 +157,59 @@ def feature_analysis(rfc, X):
     plt.xlabel('Feature Importance Score', fontsize=12)
     plt.ylabel('Features', fontsize=12)
     plt.title("Visualizing Important Features", fontsize=15, pad=15)
+
+
+def random(df, feat_to_drop, filename):
+    rcf = RandomForestClassifier(random_state=0)
+    print('Parameters currently in use:\n')
+    pprint(rcf.get_params())
+
+    # used grid search cv instead, compare
+    # can ask it for the best model not just best parameters
+    # Number of trees in random forest
+    n_estimators = [int(x) for x in np.linspace(start=100, stop=2000, num=50)]
+    # Number of features to consider at every split
+    max_features = ['auto', 'sqrt']
+    # Maximum number of levels in tree
+    max_depth = [int(x) for x in np.linspace(5, 1000, num=11)]
+    max_depth.append(None)
+    # Minimum number of samples required to split a node
+    min_samples_split = [2, 5, 10]
+    # Minimum number of samples required at each leaf node
+    min_samples_leaf = [1, 2, 4]
+    # Method of selecting samples for training each tree
+    bootstrap = [True, False]
+    # Create the random grid
+    random_grid = {'n_estimators': n_estimators,
+                   'max_features': max_features,
+                   'max_depth': max_depth,
+                   'min_samples_split': min_samples_split,
+                   'min_samples_leaf': min_samples_leaf,
+                   'bootstrap': bootstrap}
+    pprint(random_grid)
+
+
+    # Use the random grid to search for best hyperparameters
+    # First create the base model to tune
+    rcf = RandomForestClassifier()
+    # Random search of parameters, using 3 fold cross validation,
+    # search across 100 different combinations, and use all available cores
+    rcf_random = RandomizedSearchCV(estimator=rcf, param_distributions=random_grid, n_iter=10, cv=3, verbose=2,
+                                    random_state=0, n_jobs=-1)
+    # Fit the random search model
+
+    rcf_random.fit(X_train, Y_train)
+    rcf_random.get_params()
+    print('best parameters =', rcf_random.best_params_)
+    best_random = rcf_random.best_estimator_
+    with open(filename, "wb") as f:
+        pickle.dump(best_random, f)
+
+    best_random = pickle.load(open(filename, "rb"))
+
+
+
+#def grid():
 
 
 

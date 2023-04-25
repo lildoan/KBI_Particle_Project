@@ -67,3 +67,38 @@ ax1 = fig2.add_subplot(1,1,1)
 for x in bucket_types:
     make_scatter(fig2, df4, x, "circularity", "intensity_mean")
 plt.show()
+
+from utilsF import random, confusion, feature_analysis
+
+feat_to_drop = ['type','step','experiment','particle_id', 'ml_type_proba']
+random(df4,feat_to_drop,"human_best_model.pkl")
+
+#df.type.values.reshape(-1, 1).shape
+X = df4.drop(feat_to_drop, axis=1)
+Y = df4['type'].values
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+
+best_random = pickle.load(open("human_best_model.pkl", "rb"))
+
+# Best Model
+prediction = best_random.predict(X_test)
+accuracy_score(Y_test, prediction)
+best_accuracy = accuracy_score(Y_test, prediction)
+print('best accuracy score =', accuracy_score(Y_test, prediction))
+# f1_score(Y_test, prediction)
+
+# Base Model
+rfc_base = RandomForestClassifier(criterion='gini', max_depth=3, random_state=0)
+rfc_base.fit(X_train, Y_train)
+prediction = rfc_base.predict(X_test)
+accuracy_score(Y_test, prediction)
+base_accuracy = accuracy_score(Y_test, prediction)
+
+print('best parameters =', rcf_random.best_params_)
+print('base accuracy score =', accuracy_score(Y_test, prediction))
+print('Improvement of {:0.2f}%'.format(100 * (best_accuracy - base_accuracy) / base_accuracy))
+
+
+
+types = df4['type'].unique()
+confusion(best_random,X_test,Y_test,types)
