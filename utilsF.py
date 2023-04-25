@@ -140,7 +140,7 @@ def confusion(rfc, X, Y, types):
 
         print(title)
         print(disp.confusion_matrix)
-
+    plt.show()
 
 def feature_analysis(rfc, X):
     """
@@ -198,6 +198,10 @@ def random(df, feat_to_drop, filename):
                                     random_state=0, n_jobs=-1)
     # Fit the random search model
 
+    X = df.drop(feat_to_drop, axis=1)
+    Y = df['type'].values
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+
     rcf_random.fit(X_train, Y_train)
     rcf_random.get_params()
     print('best parameters =', rcf_random.best_params_)
@@ -205,7 +209,6 @@ def random(df, feat_to_drop, filename):
     with open(filename, "wb") as f:
         pickle.dump(best_random, f)
 
-    best_random = pickle.load(open(filename, "rb"))
 
 
 
