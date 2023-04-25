@@ -28,6 +28,7 @@ def make_histogram(fig, df, particle_type, parameter):
     legend=plt.legend(markerscale = 10)
 
 # Create buckets to group proteins 
+'''
 def normalize_data(df, particle_types):
     import pandas as pd
     type_df = pd.DataFrame()
@@ -35,6 +36,28 @@ def normalize_data(df, particle_types):
         df1 = df[df.type == x]
         type_df = pd.concat([type_df, df1])
     return type_df
+'''
+def rebucket_data(df, buckets=None):
+    """
+   Converts an ML data dataframe into a new one where the type column is simplified according to the buckets dict.
+        Parameters
+    ----------
+    df : dataframe
+        Input data to transform.
+
+    buckets : dict
+    import IPython; IPython.embed()
+    """
+    for key in buckets.keys():
+        mask = df["type"].isin(buckets[key])
+        df.loc[mask,'type'] = key
+        # for every loc in DF where it is true, input what is defined
+        # rows, columns: take type column and change to defined
+        #EXAMPLE:
+        # buckets = {"protein" : ["protein", 'dense globular', 'dense fibral', 'translucent ring-like', 'dense ring-like', 'translucent fibral', 'translucent globular'], "silicon oil": ['silicone oil', 'multi si oil','silicone oil agg.']}
+        # rebucket_data(df, buckets=buckets)
+        # bucket_types = df.type.unique()
+        # print(bucket_types)
 
 '''
 protein_data = normalize_data(df, ['protein', 'dense globular', 'dense fibral', 'translucent ring-like', 'dense ring-like', 'translucent fibral', 'translucent globular'])
