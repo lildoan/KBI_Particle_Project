@@ -157,7 +157,7 @@ def feature_analysis(rfc, X):
     plt.xlabel('Feature Importance Score', fontsize=12)
     plt.ylabel('Features', fontsize=12)
     plt.title("Visualizing Important Features", fontsize=15, pad=15)
-
+    plt.show()
 
 def random(df, feat_to_drop, filename):
     rcf = RandomForestClassifier(random_state=0)
