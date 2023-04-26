@@ -11,6 +11,8 @@ import pickle
 from pprint import pprint
 from utilsF import random
 
+#takes too long to run, too many particles?
+
 feat_to_drop = ['type','step','experiment','particle_id']
 
 df = pd.read_csv('categorized_particles.csv')

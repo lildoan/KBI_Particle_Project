@@ -135,7 +135,7 @@ def confusion(rfc, X, Y, types):
     for title, normalize in title_options:
         disp = ConfusionMatrixDisplay.from_estimator(rfc, X, Y, display_labels=types, include_values=False,
                                                      cmap=plt.cm.Blues, normalize=normalize,
-                                                     xticks_rotation='vertical')
+                                                     xticks_rotation= 45)#'vertical')
         disp.ax_.set_title(title)
 
         print(title)

@@ -11,20 +11,24 @@ import pickle
 from pprint import pprint
 from utilsF import random
 
-feat_to_drop4 = ['type','step','experiment','particle_id', 'ml_type_proba']
+#creating a new model on human data with tuned hyperparamters using random search and saving it to a Pickle file
+
+feat_to_drop4 = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba']
 
 df4 = pd.read_csv('categorized_particles_101.csv')
 
-types=df4['type'].unique()
+types = df4['type'].unique()
 print(types)
 
+
 def group_particles(df, particle_type):
-    type_df=df.loc[df["type"]==particle_type]
+    type_df = df.loc[df["type"] == particle_type]
     print("number of {} particles = {}".format(particle_type, type_df.shape[0]))
     return type_df
-for x in types:
-    group_particles(df4,x)
 
+
+for x in types:
+    group_particles(df4, x)
 
 
 def rebucket_data(df, buckets=None):
@@ -39,15 +43,18 @@ def rebucket_data(df, buckets=None):
     import IPython; IPython.embed()
     """
     for key in buckets.keys():
-        #print(buckets[keys])
+        # print(buckets[keys])
         mask = df["type"].isin(buckets[key])
-        df.loc[mask,'type'] = key
+        df.loc[mask, 'type'] = key
         # for every loc in DF where it is true, input what is defined
         # rows, columns: take type column and change to defined
 
-buckets = {"protein" : ["protein", 'dense globular', 'dense fibral', 'translucent ring-like', 'dense ring-like', 'translucent fibral', 'translucent globular'], "silicon oil": ['silicone oil', 'multi si oil','silicone oil agg.']}
+
+buckets = {"protein": ["protein", 'dense globular', 'dense fibral', 'translucent ring-like', 'dense ring-like',
+                       'translucent fibral', 'translucent globular'],
+           "silicon oil": ['silicone oil', 'multi si oil', 'silicone oil agg.']}
 rebucket_data(df4, buckets=buckets)
 bucket_types4 = df4.type.unique()
-#print(bucket_types)
+# print(bucket_types)
 
-random(df4,feat_to_drop4,"human_best_model.pkl")
+random(df4, feat_to_drop4, "human_best_model.pkl")
