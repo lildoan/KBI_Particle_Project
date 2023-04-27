@@ -188,5 +188,3 @@ print('base grid accuracy score =', accuracy_score(Y_test, prediction))
 
 print('Improvement of {:0.2f}%'.format(100 * (best_grid_accuracy - base_grid_accuracy) / base_grid_accuracy))
 print('Improvement of {:0.2f}% from gridsearch against randomsearchcv'.format(100 * (best_grid_accuracy - base_accuracy) / base_accuracy))
-#hello
-
