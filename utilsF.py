@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score, f1_score
 import pickle
 from pprint import pprint
 import numpy as np
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 
 def group_particles(df, particle_type):
     type_df=df.loc[df["type"]==particle_type]
@@ -140,6 +140,7 @@ def confusion(rfc, X, Y, types):
 
         print(title)
         print(disp.confusion_matrix)
+    plt.tight_layout()
     plt.show()
 
 def feature_analysis(rfc, X):
@@ -210,9 +211,54 @@ def random(df, feat_to_drop, filename):
         pickle.dump(best_random, f)
 
 
+def grid(df, feat_to_drop, filename):
+
+    # Create the parameter grid based on the results of random search
+    param_grid = {
+        'bootstrap': [False],
+        'max_depth': [200, 400, 600],
+        'max_features': [2, 3],
+        'min_samples_leaf': [1, 2],
+        'min_samples_split': [4, 6],
+        'n_estimators': [500, 1000, 1500, 2000]
+    }
+
+    # Create a base model
+    rfc_grid = RandomForestClassifier()
+    # Instantiate the grid search model
+    grid_search = GridSearchCV(estimator=rfc_grid, param_grid=param_grid,
+                               cv=2, n_jobs=-1, verbose=2)
+    print('grid search =', grid_search)
+
+    X = df.drop(feat_to_drop, axis=1)
+    Y = df['type'].values
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+
+    grid_search.fit(X_train, Y_train)
+    grid_search.best_params_
+    print('best parameters for grid search =', grid_search.best_params_)
+
+    best_grid = grid_search.best_estimator_
+    prediction = best_grid.predict(X_test)
+    accuracy_score(Y_test, prediction)
+    best_grid_accuracy = accuracy_score(Y_test, prediction)
+    print('best grid accuracy score = ', accuracy_score(Y_test, prediction))
+
+    rfc_grid_base = RandomForestClassifier(criterion='gini', max_depth=3, random_state=0)
+    rfc_grid_base.fit(X_train, Y_train)
+    prediction = rfc_grid_base.predict(X_test)
+    base_grid_accuracy = rfc_grid_base.score(Y_test, prediction)
+
+    # print('best parameters =',rcf_random.best_params_)
+
+    print('best parameters for grid search =', grid_search.best_params_)
 
 
-#def grid():
+    print('base grid accuracy score =', base_grid_accuracy)
 
-
+    print('Improvement of {:0.2f}%'.format(100 * (best_grid_accuracy - base_grid_accuracy) / base_grid_accuracy))
+    print('Improvement of {:0.2f}% from gridsearch against randomsearchcv'.format(
+        100 * (best_grid_accuracy - base_accuracy) / base_accuracy))
+    with open(filename, "wb") as f:
+        pickle.dump(best_grid, f)
 
