@@ -17,7 +17,7 @@ from utilsF import random, confusion, feature_analysis, group_particles, rebucke
 # df = pd.read_csv('categorized_particles.csv')
 # df2 = pd.read_csv('fiber.csv')
 # df3 = pd.read_csv('air_bubble_and_fiber.csv')
-df4 = pd.read_csv('categorized_particles_101.csv')
+df4 = pd.read_csv('Particle Data/categorized_particles_101.csv')
 
 types = df4['type'].unique()
 print(types)

@@ -9,13 +9,13 @@ from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.metrics import accuracy_score, f1_score
 import pickle
 from pprint import pprint
-from utilsF import random
+from utilsF import random, grid
 
 #creating a new model on human data with tuned hyperparamters using random search and saving it to a Pickle file
 
 feat_to_drop4 = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba']
 
-df4 = pd.read_csv('categorized_particles_101.csv')
+df4 = pd.read_csv('Particle Data/categorized_particles_101.csv')
 
 types = df4['type'].unique()
 print(types)
@@ -57,4 +57,6 @@ rebucket_data(df4, buckets=buckets)
 bucket_types4 = df4.type.unique()
 # print(bucket_types)
 
-random(df4, feat_to_drop4, "human_best_model.pkl")
+random(df4, feat_to_drop4, "human_best_model_random.pkl")
+
+grid(df4, feat_to_drop, "human_best_model_grid.pkl")

@@ -135,11 +135,12 @@ def confusion(rfc, X, Y, types):
     for title, normalize in title_options:
         disp = ConfusionMatrixDisplay.from_estimator(rfc, X, Y, display_labels=types, include_values=False,
                                                      cmap=plt.cm.Blues, normalize=normalize,
-                                                     xticks_rotation= 45)#'vertical')
+                                                     xticks_rotation= 'vertical')
         disp.ax_.set_title(title)
 
         print(title)
         print(disp.confusion_matrix)
+        plt.tight_layout()
     plt.tight_layout()
     plt.show()
 
@@ -158,6 +159,7 @@ def feature_analysis(rfc, X):
     plt.xlabel('Feature Importance Score', fontsize=12)
     plt.ylabel('Features', fontsize=12)
     plt.title("Visualizing Important Features", fontsize=15, pad=15)
+    plt.tight_layout()
     plt.show()
 
 def random(df, feat_to_drop, filename):
@@ -195,7 +197,7 @@ def random(df, feat_to_drop, filename):
     rcf = RandomForestClassifier()
     # Random search of parameters, using 3 fold cross validation,
     # search across 100 different combinations, and use all available cores
-    rcf_random = RandomizedSearchCV(estimator=rcf, param_distributions=random_grid, n_iter=10, cv=3, verbose=2,
+    rcf_random = RandomizedSearchCV(estimator=rcf, param_distributions=random_grid, n_iter=100, cv=5, verbose=2,
                                     random_state=0, n_jobs=-1)
     # Fit the random search model
 
@@ -227,7 +229,7 @@ def grid(df, feat_to_drop, filename):
     rfc_grid = RandomForestClassifier()
     # Instantiate the grid search model
     grid_search = GridSearchCV(estimator=rfc_grid, param_grid=param_grid,
-                               cv=2, n_jobs=-1, verbose=2)
+                               cv=5, n_jobs=-1, verbose=2)
     print('grid search =', grid_search)
 
     X = df.drop(feat_to_drop, axis=1)

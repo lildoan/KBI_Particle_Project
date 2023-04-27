@@ -9,13 +9,13 @@ from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.metrics import accuracy_score, f1_score
 import pickle
 from pprint import pprint
-from utilsF import random
+from utilsF import random, grid
 
 #takes too long to run, too many particles?
 
 feat_to_drop = ['type','step','experiment','particle_id']
 
-df = pd.read_csv('categorized_particles.csv')
+df = pd.read_csv('Particle Data/categorized_particles.csv')
 
 
 types=df['type'].unique()
@@ -52,4 +52,6 @@ rebucket_data(df, buckets=buckets)
 bucket_types = df.type.unique()
 #print(bucket_types)
 
-random(df,feat_to_drop,"main_best_model.pkl")
+random(df,feat_to_drop,"main_best_model_random.pkl")
+
+grid(df, feat_to_drop, "main_best_model_grid.pkl")

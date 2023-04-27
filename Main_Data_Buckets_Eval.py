@@ -14,7 +14,7 @@ from utilsF import random, confusion, feature_analysis
 
 #file to run best model on bucketed human catagorized data
 
-df = pd.read_csv('categorized_particles.csv')
+df = pd.read_csv('Particle Data/categorized_particles.csv')
 #df2 = pd.read_csv('fiber.csv')
 #df3 = pd.read_csv('air_bubble_and_fiber.csv')
 #df4 = pd.read_csv('categorized_particles_101.csv')
