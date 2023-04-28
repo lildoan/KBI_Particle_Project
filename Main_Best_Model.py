@@ -1,3 +1,5 @@
+from os.path import join, dirname
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,20 +13,23 @@ import pickle
 from pprint import pprint
 from utilsF import random, grid
 
-#takes too long to run, too many particles?
+# takes too long to run, too many particles?
 
-feat_to_drop = ['type','step','experiment','particle_id']
+feat_to_drop = ['type', 'step', 'experiment', 'particle_id']
+csv_file = join(dirname(__file__), "categorized_particles.csv")
+df = pd.read_csv(csv_file)
 
-df = pd.read_csv('Particle Data/categorized_particles.csv')
-
-
-types=df['type'].unique()
+types = df['type'].unique()
 print(types)
 
+
 def group_particles(df, particle_type):
-    type_df=df.loc[df["type"]==particle_type]
-    print("number of {} particles = {}".format(particle_type, type_df.shape[0]))
+    type_df = df.loc[df["type"] == particle_type]
+    print(
+        "number of {} particles = {}".format(particle_type, type_df.shape[0]))
     return type_df
+
+
 for x in types:
     group_particles(df, x)
 
@@ -41,17 +46,22 @@ def rebucket_data(df, buckets=None):
     import IPython; IPython.embed()
     """
     for key in buckets.keys():
-        #print(buckets[keys])
+        # print(buckets[keys])
         mask = df["type"].isin(buckets[key])
-        df.loc[mask,'type'] = key
+        df.loc[mask, 'type'] = key
         # for every loc in DF where it is true, input what is defined
         # rows, columns: take type column and change to defined
 
-buckets = {"protein" : ["protein", 'dense globular', 'dense fibral', 'translucent ring-like', 'dense ring-like', 'translucent fibral', 'translucent globular'], "silicon oil": ['silicone oil', 'multi si oil','silicone oil agg.']}
+
+buckets = {"protein": ["protein", 'dense globular', 'dense fibral',
+                       'translucent ring-like', 'dense ring-like',
+                       'translucent fibral', 'translucent globular'],
+           "silicon oil": ['silicone oil', 'multi si oil',
+                           'silicone oil agg.']}
 rebucket_data(df, buckets=buckets)
 bucket_types = df.type.unique()
-#print(bucket_types)
+# print(bucket_types)
 
-random(df,feat_to_drop,"main_best_model_random.pkl")
+random(df, feat_to_drop, "main_best_model_random.pkl")
 
 grid(df, feat_to_drop, "main_best_model_grid.pkl")

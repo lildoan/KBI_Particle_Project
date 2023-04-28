@@ -1,3 +1,5 @@
+from os.path import join, dirname
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,12 +13,13 @@ import pickle
 from pprint import pprint
 from utilsF import random, grid
 
-#creating a new model on human data with tuned hyperparamters using random search and saving it to a Pickle file
+# creating a new model on human data with tuned hyperparamters using random
+# search and saving it to a Pickle file
 
 feat_to_drop4 = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba']
-
-df4 = pd.read_csv('Particle Data/categorized_particles_101.csv')
-
+csv_file = join(dirname(__file__), "categorized_particles_101.csv")
+# df4 = pd.read_csv('Particle Data/categorized_particles_101.csv')
+df4 = pd.read_csv(csv_file)
 types = df4['type'].unique()
 print(types)
 
@@ -59,4 +62,4 @@ bucket_types4 = df4.type.unique()
 
 random(df4, feat_to_drop4, "human_best_model_random.pkl")
 
-grid(df4, feat_to_drop, "human_best_model_grid.pkl")
+grid(df4, feat_to_drop4, "human_best_model_grid.pkl")
