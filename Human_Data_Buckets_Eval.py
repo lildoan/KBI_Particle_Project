@@ -11,6 +11,7 @@ import pickle
 from pprint import pprint
 from utilsF import random, confusion, feature_analysis, group_particles, rebucket_data, \
     make_histogram, make_scatter
+from Random_Forest_function import random_forest_model
 
 # file to run best model on bucketed human categorized data
 
@@ -61,9 +62,15 @@ ax1 = fig2.add_subplot(1, 1, 1)
 for x in bucket_types:
     make_scatter(fig2, df4, x, "circularity", "intensity_mean")
 
-best_random = pickle.load(open("human_best_model.pkl", "rb"))
+#random_forest_model(df4, ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba'], 0.3, 0.07)
 
-feat_to_drop = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba']
+
+
+best_random = pickle.load(open("human_best_model_random.pkl", "rb"))
+
+feat_to_drop = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba'] #, 'edge_particle', 'x_right', 'x_left',
+                 #'y_bottom', 'time_stamp_s', 'frame_num', 'y_top', 'particle_num']
+#'edge_particle', 'x_right', 'x_left', 'y_bottom', 'time_stamp_s', 'frame_num', 'y_top', 'particle_num'
 X = df4.drop(feat_to_drop, axis=1)
 Y = df4['type'].values
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -72,15 +79,17 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_
 prediction = best_random.predict(X_test)
 best_random_accuracy = best_random.score(X_test, Y_test)
 print('best accuracy score =', best_random_accuracy)
+print('train random =', best_random.score(X_train, Y_train))
 # f1_score(Y_test, prediction)
 
 # Base Model
-rfc_base = RandomForestClassifier(criterion='gini', max_depth=3, random_state=0)
+rfc_base = RandomForestClassifier(criterion='gini', random_state=0)
 rfc_base.fit(X_train, Y_train)
 prediction_base = rfc_base.predict(X_test)
 base_accuracy = rfc_base.score(X_test,Y_test)
 
 print('base accuracy score =', base_accuracy)
+print('train base =', rfc_base.score(X_train,Y_train))
 print('Improvement of {:0.2f}%'.format(100 * (best_random_accuracy - base_accuracy) / base_accuracy))
 
 confusion(best_random, X_test, Y_test, bucket_types)

@@ -13,8 +13,8 @@ from utilsF import random, grid
 
 #creating a new model on human data with tuned hyperparamters using random search and saving it to a Pickle file
 
-feat_to_drop4 = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba']
-
+feat_to_drop4 = ['type', 'step', 'experiment', 'particle_id', 'ml_type_proba'] #, 'edge_particle', 'x_right', 'x_left',
+                 #'y_bottom', 'time_stamp_s', 'frame_num', 'y_top', 'particle_num']
 df4 = pd.read_csv('Particle Data/categorized_particles_101.csv')
 
 types = df4['type'].unique()
@@ -59,4 +59,4 @@ bucket_types4 = df4.type.unique()
 
 random(df4, feat_to_drop4, "human_best_model_random.pkl")
 
-grid(df4, feat_to_drop, "human_best_model_grid.pkl")
+#grid(df4, feat_to_drop, "human_best_model_grid.pkl")
